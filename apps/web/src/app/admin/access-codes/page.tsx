@@ -7,8 +7,8 @@ import {
   BarChart3, Users, Activity
 } from 'lucide-react';
 
-// Python agent server address
-const AGENT_API_URL = process.env.NEXT_PUBLIC_AGENT_API_URL || 'http://localhost:8000';
+// Use Next.js API routes instead of direct backend access
+const API_BASE_URL = '/api';
 
 interface AccessCode {
   access_code: string;
@@ -77,7 +77,7 @@ export default function AdminAccessCodesPage() {
       if (searchTerm) params.append('search', searchTerm);
       if (filterEnabled !== null) params.append('enabled', filterEnabled.toString());
 
-      const response = await fetch(`${AGENT_API_URL}/admin/access-codes?${params}`, {
+      const response = await fetch(`${API_BASE_URL}/admin/access-codes?${params}`, {
         headers: {
           'X-Access-Code': adminCode,
         },
@@ -102,7 +102,7 @@ export default function AdminAccessCodesPage() {
     if (!adminCode) return;
 
     try {
-      const response = await fetch(`${AGENT_API_URL}/admin/access-codes/stats`, {
+      const response = await fetch(`${API_BASE_URL}/admin/access-codes/stats`, {
         headers: {
           'X-Access-Code': adminCode,
         },
@@ -138,7 +138,7 @@ export default function AdminAccessCodesPage() {
       setError(null);
       
       // Try to get statistics to verify access code
-      const response = await fetch(`${AGENT_API_URL}/admin/access-codes/stats`, {
+      const response = await fetch(`${API_BASE_URL}/admin/access-codes/stats`, {
         headers: {
           'X-Access-Code': tempAdminCode,
         },
@@ -171,7 +171,7 @@ export default function AdminAccessCodesPage() {
     max_conversations: number | null;
   }) => {
     try {
-      const response = await fetch(`${AGENT_API_URL}/admin/access-codes`, {
+      const response = await fetch(`${API_BASE_URL}/admin/access-codes`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -199,7 +199,7 @@ export default function AdminAccessCodesPage() {
     max_conversations: number | null;
   }) => {
     try {
-      const response = await fetch(`${AGENT_API_URL}/admin/access-codes/batch`, {
+      const response = await fetch(`${API_BASE_URL}/admin/access-codes/batch`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -227,7 +227,7 @@ export default function AdminAccessCodesPage() {
     max_conversations?: number | null;
   }) => {
     try {
-      const response = await fetch(`${AGENT_API_URL}/admin/access-codes/${code}`, {
+      const response = await fetch(`${API_BASE_URL}/admin/access-codes/${code}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -253,7 +253,7 @@ export default function AdminAccessCodesPage() {
     if (!confirm('Are you sure you want to delete this access code?')) return;
 
     try {
-      const response = await fetch(`${AGENT_API_URL}/admin/access-codes/${code}`, {
+      const response = await fetch(`${API_BASE_URL}/admin/access-codes/${code}`, {
         method: 'DELETE',
         headers: {
           'X-Access-Code': adminCode,
@@ -280,7 +280,7 @@ export default function AdminAccessCodesPage() {
     if (!confirm(`Are you sure you want to delete ${selectedCodes.size} selected access codes?`)) return;
 
     try {
-      const response = await fetch(`${AGENT_API_URL}/admin/access-codes/batch-delete`, {
+      const response = await fetch(`${API_BASE_URL}/admin/access-codes/batch-delete`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -304,7 +304,7 @@ export default function AdminAccessCodesPage() {
   // Export access codes
   const handleExport = async () => {
     try {
-      const response = await fetch(`${AGENT_API_URL}/admin/access-codes/export/json`, {
+      const response = await fetch(`${API_BASE_URL}/admin/access-codes/export/json`, {
         headers: {
           'X-Access-Code': adminCode,
         },
@@ -335,7 +335,7 @@ export default function AdminAccessCodesPage() {
       const data = JSON.parse(text);
       const codes = data.codes || [];
 
-      const response = await fetch(`${AGENT_API_URL}/admin/access-codes/import/json`, {
+      const response = await fetch(`${API_BASE_URL}/admin/access-codes/import/json`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
